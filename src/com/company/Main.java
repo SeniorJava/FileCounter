@@ -20,16 +20,19 @@ public class Main  {
 
         List<String> strings = new ArrayList<>();
 
-        List<Threads> threads = new ArrayList<>();
+        List<Thread> threads = new ArrayList<>();
 
         while (reader.ready()) {
             strings.add(reader.readLine());
         }
 
-        for (String s : strings) {
-            threads.add(new Threads(s, new FileVisitCounter(), fileW.getName()));
+        for (int i = 0; i < strings.size(); i++) {
+            threads.add(new Thread(new Threads(strings.get(i), new FileVisitCounter(), fileW.getName()),String.valueOf(i)));
         }
 
+        for (Thread t : threads) {
+            t.start();
+        }
 
 
 
