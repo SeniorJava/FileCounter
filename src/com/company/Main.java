@@ -6,13 +6,14 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class Main  {
 
-    public static void main(String[] args) throws IOException
-    {
+    public static void main(String[] args) throws IOException, InterruptedException {
         File fileR = new File(args[0]);
         File fileW = new File(args[1]);
 
@@ -26,19 +27,19 @@ public class Main  {
             strings.add(reader.readLine());
         }
 
+        ThreadGroup threadGroup = new ThreadGroup("myGroup");
         for (int i = 0; i < strings.size(); i++) {
-            threads.add(new Thread(new Threads(strings.get(i), new FileVisitCounter(), fileW.getName()),String.valueOf(i)));
+            threads.add(new Thread(threadGroup,new MyThreads(strings.get(i), new FileVisitCounter(), fileW.getName()),String.valueOf(i+1)));
         }
 
         for (Thread t : threads) {
             t.start();
         }
 
-
-
-//        for (int i = 0; i < threads.size() ; i++) {
-//            System.out.println(i + "\t" + threads.get(i).getCount() + "\t" + threads.get(i).getPath());
-//        }
+        while (threadGroup.activeCount() > 0) {
+            Thread.sleep(1);
+        }
+        new MyCSVWriter(fileW.getName()).writerToCSV();
 
 
     }

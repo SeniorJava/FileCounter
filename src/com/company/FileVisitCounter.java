@@ -10,7 +10,6 @@ import java.nio.file.attribute.BasicFileAttributes;
  * Created by senior on 18.06.15.
  */
 public class FileVisitCounter extends SimpleFileVisitor<Path> {
-
     private long count = 0;
 
     public long getCount() {
@@ -20,7 +19,6 @@ public class FileVisitCounter extends SimpleFileVisitor<Path> {
     @Override
     public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
         count++;
-//        System.out.println(count);
         return FileVisitResult.CONTINUE;
     }
 }
