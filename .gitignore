@@ -7,6 +7,5 @@ target
 *.iml
 *.csv
 myCSV.csv
-/.gitignore
-
 src/com/company/test.txt
+.gitignore
