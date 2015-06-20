@@ -1,0 +1,5 @@
+/home/senior/Музыка
+/usr
+/home/senior/Видео
+/home/senior/Загрузки
+/lib
