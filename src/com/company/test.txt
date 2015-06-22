@@ -3,3 +3,6 @@
 /home/senior/Видео
 /home/senior/Загрузки
 /lib
+/media/senior/yyy/Windows
+/media/senior/yyy/Program Files
+/media/senior/yyy/Users

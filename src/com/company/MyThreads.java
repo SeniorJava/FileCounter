@@ -10,10 +10,19 @@ import java.nio.file.Path;
  */
 public class MyThreads implements Runnable {
 
+    private static boolean flag = true;
     private String path;
     private FileVisitCounter fileVisitor;
     private String fileForWrite;
     private long count;
+
+    public static boolean isFlag() {
+        return flag;
+    }
+
+    public static void setFlag(boolean flag) {
+        MyThreads.flag = flag;
+    }
 
     public String getPath() {
         return path;
@@ -37,7 +46,14 @@ public class MyThreads implements Runnable {
         try {
             Files.walkFileTree(p, fileVisitor);
             count = fileVisitor.getCount();
-            System.out.println(Thread.currentThread().getName() + "\t" + this.getCount() + "\t" + this.getPath());
+
+            if (!Thread.currentThread().isInterrupted()) {
+                System.out.println(Thread.currentThread().getName() + "\t" + this.getCount() + "\t" + this.getPath());
+            }
+            else {
+                flag = false;
+                System.out.println("Подсчет прерванн!");
+            }
             new  MyCSVWriter(fileForWrite).putResults(path,count);
 
         } catch (IOException e) {
