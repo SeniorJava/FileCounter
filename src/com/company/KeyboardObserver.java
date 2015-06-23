@@ -20,8 +20,8 @@ public class KeyboardObserver extends Thread {
     @Override
     public void run()
     {
-        frame = new JFrame("KeyPress Tester");
-        frame.setTitle("Transparent JFrame Demo");
+        frame = new JFrame("KeyPress Observer");
+        frame.setTitle("JFrame");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         frame.setUndecorated(true);
@@ -78,4 +78,5 @@ public class KeyboardObserver extends Thread {
     {
         return keyEvents.poll();
     }
+
 }

@@ -18,7 +18,10 @@ public class FileVisitCounter extends SimpleFileVisitor<Path> {
 
     @Override
     public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+        if (!MyThreads.isRun())return FileVisitResult.TERMINATE;
+        else {
         count++;
-        return FileVisitResult.CONTINUE;
+        return FileVisitResult.CONTINUE;}
+
     }
 }

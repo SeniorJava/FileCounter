@@ -7,9 +7,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 
 public class Main  {
@@ -19,6 +20,7 @@ public class Main  {
         File fileW = new File(args[1]);
         KeyboardObserver keyboardObserver = new KeyboardObserver();
         keyboardObserver.start();
+        boolean isDone  = false;
 
         BufferedReader reader = new BufferedReader(new FileReader(fileR));
 
@@ -36,37 +38,43 @@ public class Main  {
             threads.add(new Thread(threadGroup,new MyThreads(strings.get(i), new FileVisitCounter(), fileW.getName()),String.valueOf(i+1)));
         }
 
+        ExecutorService pool = Executors.newFixedThreadPool(threads.size());
+        List<Future> futures = new ArrayList<>();
+
         for (Thread t : threads) {
-
-//            if (!MyThreads.isFlag()) break;
-////           t.start();
-//            if (keyboardObserver.hasKeyEvents()) {
-//                KeyEvent event = keyboardObserver.getEventFromTop();
-//                if (event.getKeyCode() == KeyEvent.VK_ESCAPE) {
-//                    threadGroup.interrupt();
-//                    MyThreads.setFlag(false);
-//                    break;
-//                }
-//            }
-            t.start();
-
-        }
-
-        while (threadGroup.activeCount() > 0) {
-            if (keyboardObserver.hasKeyEvents()) {
-                KeyEvent event = keyboardObserver.getEventFromTop();
-                if (event.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                    threadGroup.interrupt();
-                   break;
-                }
+            if (MyThreads.isRun()){
+                futures.add(pool.submit(t));
+            }
+            else{
+                pool.shutdownNow();
+                break;
             }
         }
 
-//        while (threadGroup.activeCount() > 0) {
-//            Thread.sleep(1);
-//        }
-        new MyCSVWriter(fileW.getName()).writerToCSV();
+        while (!pool.isTerminated()) {
+            if (keyboardObserver.hasKeyEvents()) {
+                KeyEvent event = keyboardObserver.getEventFromTop();
+                if (event.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                    pool.shutdownNow();
+                    new MyCSVWriter(fileW.getName()).writerToCSV();
+                    System.out.println("Запись завершена");
+                    break;
+                }
+            }
+            if (isDone) {
+                new MyCSVWriter(fileW.getName()).writerToCSV();
+                System.out.println("Запись завершена");
+                break;
+            }
+            for (Future f : futures) {
+                if (!f.isDone()) {
+                    isDone = false;
+                    break;
+                }
+                isDone = true;
+            }
 
+        }
 
     }
 

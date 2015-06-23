@@ -16,7 +16,7 @@ public class MyThreads implements Runnable {
     private String fileForWrite;
     private long count;
 
-    public static boolean isFlag() {
+    public static boolean isRun() {
         return flag;
     }
 
@@ -48,15 +48,17 @@ public class MyThreads implements Runnable {
             count = fileVisitor.getCount();
 
             if (!Thread.currentThread().isInterrupted()) {
-                System.out.println(Thread.currentThread().getName() + "\t" + this.getCount() + "\t" + this.getPath());
+
+                System.out.println(Thread.currentThread().getName().charAt(Thread.currentThread().getName().length()-1) + "\t" + this.getCount() + "\t" + this.getPath());
+                new  MyCSVWriter(fileForWrite).putResults(path,count);
             }
             else {
                 flag = false;
                 System.out.println("Подсчет прерванн!");
             }
-            new  MyCSVWriter(fileForWrite).putResults(path,count);
 
-        } catch (IOException e) {
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
