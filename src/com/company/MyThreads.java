@@ -20,10 +20,6 @@ public class MyThreads implements Runnable {
         return flag;
     }
 
-    public static void setFlag(boolean flag) {
-        MyThreads.flag = flag;
-    }
-
     public String getPath() {
         return path;
     }
@@ -38,7 +34,6 @@ public class MyThreads implements Runnable {
         this.fileForWrite = fileForWrite;
 
     }
-
 
     @Override
     public void run() {
